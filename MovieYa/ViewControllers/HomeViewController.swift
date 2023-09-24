@@ -8,11 +8,20 @@
 import UIKit
 import SnapKit
 
-class HomeViewController: UIViewController {
+enum Section: String, CaseIterable {
+    case nowPlaying = "현재 상영 영화"
+    case popular = "인기 영화"
+    case topRated = "높은 평점"
+    case Upcoming = "공개 예정"
+}
+
+class HomeViewController: UICollectionViewController {
+    private var sections: [Section] = [.nowPlaying, .popular, .topRated, .Upcoming]
     
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
         iv.image = UIImage(systemName: "person.crop.circle")
+        iv.image?.withTintColor(.white)
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapProfileImg))
         iv.isUserInteractionEnabled = true
         iv.addGestureRecognizer(tap)
@@ -38,11 +47,13 @@ class HomeViewController: UIViewController {
         showImage(true)
     }
     
-    
     private func configureUI() {
-        view.backgroundColor = .white
+        collectionView.backgroundColor = .black
+        self.navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.prefersLargeTitles = true
-        title = "MovieYa"
+        navigationItem.title = "MovieYa"
+        tabBarItem.title = "Home"
         
         guard let navigationBar = self.navigationController?.navigationBar else { return }
         navigationBar.addSubview(imageView)
@@ -54,6 +65,12 @@ class HomeViewController: UIViewController {
             $0.bottom.equalToSuperview().inset(NavigationBarConst.ImageBottomMarginForLargeState)
             $0.width.height.equalTo(NavigationBarConst.ImageSizeForLargeState)
         }
+        configureCollectionView()
+    }
+    
+    private func configureCollectionView() {
+        collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
+        collectionView.register(MovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MovieHeaderView.identifier)
     }
     
     private func moveAndResizeImage(for height: CGFloat) {
@@ -95,3 +112,37 @@ class HomeViewController: UIViewController {
         print("클릭")
     }
 }
+
+extension HomeViewController {
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return sections.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as! MovieCollectionViewCell
+        return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: MovieHeaderView.identifier, for: indexPath) as! MovieHeaderView
+            headerView.configure(title: sections[indexPath.section].rawValue)
+            return headerView
+        default:
+            return UICollectionReusableView()
+        }
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 50)
+    }
+}
+
+
