@@ -22,6 +22,7 @@ class HomeViewController: UICollectionViewController {
         let iv = UIImageView()
         iv.image = UIImage(systemName: "person.crop.circle")
         iv.image?.withTintColor(.white)
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapProfileImg))
         iv.isUserInteractionEnabled = true
         iv.addGestureRecognizer(tap)
@@ -35,6 +36,7 @@ class HomeViewController: UICollectionViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -48,14 +50,11 @@ class HomeViewController: UICollectionViewController {
     }
     
     private func configureUI() {
-        collectionView.backgroundColor = .black
-        self.navigationController?.navigationBar.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "MovieYa"
-        tabBarItem.title = "Home"
+        navigationController?.navigationBar.tintColor = .white
         
         guard let navigationBar = self.navigationController?.navigationBar else { return }
+        
         navigationBar.addSubview(imageView)
         imageView.layer.cornerRadius = NavigationBarConst.ImageSizeForLargeState / 2
         imageView.clipsToBounds = true
@@ -69,6 +68,8 @@ class HomeViewController: UICollectionViewController {
     }
     
     private func configureCollectionView() {
+        collectionView.backgroundColor = .black
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         collectionView.register(MovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MovieHeaderView.identifier)
     }
@@ -137,6 +138,11 @@ extension HomeViewController {
             return UICollectionReusableView()
         }
     }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let height = navigationController?.navigationBar.frame.height else { return }
+        moveAndResizeImage(for: height)
+    }
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
@@ -144,5 +150,3 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: collectionView.frame.width, height: 50)
     }
 }
-
-
