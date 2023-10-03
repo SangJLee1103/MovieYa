@@ -18,7 +18,10 @@ final class MovieYaTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
+    func testApiKey() throws {
+        
+        guard let key = Bundle.main.object(forInfoDictionaryKey: "API_KEY") as? String else { return }
+        print("Api Key: \(key)")
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         // Any test you write for XCTest can be annotated as throws and async.

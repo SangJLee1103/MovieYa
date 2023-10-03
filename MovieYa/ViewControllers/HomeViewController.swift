@@ -7,16 +7,19 @@
 
 import UIKit
 import SnapKit
-
-enum Section: String, CaseIterable {
-    case nowPlaying = "현재 상영 영화"
-    case popular = "인기 영화"
-    case topRated = "높은 평점"
-    case Upcoming = "공개 예정"
-}
+import RxSwift
+import RxCocoa
 
 class HomeViewController: UICollectionViewController {
-    private var sections: [Section] = [.nowPlaying, .popular, .topRated, .Upcoming]
+    private let viewModel: HomeViewModel
+    private let disposeBag = DisposeBag()
+    
+    private let movieViewModel = BehaviorRelay<[MovieViewModel]>(value: [])
+    var articleViewModelObserver: Observable<[MovieViewModel]> {
+        return movieViewModel.asObservable()
+    }
+    
+    private var sections: [HomeSection] = [.nowPlaying, .popular, .topRated, .Upcoming]
     
     private lazy var imageView: UIImageView = {
         let iv = UIImageView()
@@ -29,9 +32,20 @@ class HomeViewController: UICollectionViewController {
         return iv
     }()
     
+    init(collectionViewLayout: UICollectionViewLayout, viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        super.init(collectionViewLayout: collectionViewLayout)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
+        fetchMovieList()
+        subscribe()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -72,6 +86,18 @@ class HomeViewController: UICollectionViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(MovieCollectionViewCell.self, forCellWithReuseIdentifier: MovieCollectionViewCell.identifier)
         collectionView.register(MovieHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: MovieHeaderView.identifier)
+    }
+    
+    private func fetchMovieList() {
+        viewModel.fetchMovieList().subscribe(onNext: { [weak self] movieViewModels in
+            self?.movieViewModel.accept(movieViewModels)
+        }).disposed(by: disposeBag)
+    }
+    
+    private func subscribe() {
+        articleViewModelObserver.subscribe(onNext: { [weak self] movies in
+            self?.collectionView.reloadData()
+        }).disposed(by: disposeBag)
     }
     
     private func moveAndResizeImage(for height: CGFloat) {
@@ -120,11 +146,13 @@ extension HomeViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return movieViewModel.value.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as! MovieCollectionViewCell
+        let movie = movieViewModel.value[indexPath.row]
+        cell.viewModel.onNext(movie)
         return cell
     }
     

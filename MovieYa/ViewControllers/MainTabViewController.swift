@@ -15,9 +15,11 @@ class MainTabViewController: UITabBarController {
         configureViewControllers()
     }
     
-    func configureViewControllers() {
+    private func configureViewControllers() {
         let layout = createLayout()
-        let home = templateNavigationController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: HomeViewController(collectionViewLayout: layout))
+        let homeViewModel = HomeViewModel(movieRepository: MovieRepositoryImpl())
+        
+        let home = templateNavigationController(unselectedImage: #imageLiteral(resourceName: "home_unselected"), selectedImage: #imageLiteral(resourceName: "home_selected"), rootViewController: HomeViewController(collectionViewLayout: layout, viewModel: homeViewModel))
         
         let search = templateNavigationController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search_selected"), rootViewController: SearchViewController())
         
@@ -29,12 +31,12 @@ class MainTabViewController: UITabBarController {
     
     private func createLayout() -> UICollectionViewCompositionalLayout {
         let item = NSCollectionLayoutItem(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1)))
-        item.contentInsets = .init(top: 0, leading: 10, bottom: 15, trailing: 5)
+        item.contentInsets = .init(top: 0, leading: 5, bottom: 15, trailing: 5)
         
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.3), heightDimension: .fractionalWidth(0.35)), subitems: [item])
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: .init(widthDimension: .fractionalWidth(0.3), heightDimension: .fractionalWidth(0.4)), subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
-        section.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(50)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)]
+        section.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .topLeading)]
         section.orthogonalScrollingBehavior = .groupPaging
         section.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
         

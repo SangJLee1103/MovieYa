@@ -7,10 +7,16 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import SDWebImage
+import RxRelay
 
 class MovieCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "MovieCollectionViewCell"
+    
+    var viewModel = PublishSubject<MovieViewModel>()
+    private let disposeBag = DisposeBag()
     
     private let imageView: UIImageView = {
         let iv = UIImageView()
@@ -33,6 +39,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
+        bind()
     }
     
     required init?(coder: NSCoder) {
@@ -50,6 +57,16 @@ class MovieCollectionViewCell: UICollectionViewCell {
             $0.width.height.equalTo(30)
             $0.trailing.bottom.equalToSuperview().inset(10)
         }
-        
+    }
+    
+    private func bind() {
+        self.viewModel.subscribe(onNext:{ movieViewModel in
+            if let posterUrl = movieViewModel.posterPath {
+                print(posterUrl)
+                self.imageView.sd_setImage(with: URL(string: posterUrl))
+            } else {
+                print("없음")
+            }
+        }).disposed(by: disposeBag)
     }
 }
