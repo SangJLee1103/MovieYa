@@ -62,7 +62,6 @@ class MovieCollectionViewCell: UICollectionViewCell {
     private func bind() {
         self.viewModel.subscribe(onNext:{ movieViewModel in
             if let posterUrl = movieViewModel.posterPath {
-                print(posterUrl)
                 self.imageView.sd_setImage(with: URL(string: posterUrl))
             } else {
                 print("없음")

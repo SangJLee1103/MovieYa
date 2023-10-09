@@ -16,24 +16,19 @@ final class HomeViewModel {
         self.movieRepository = movieRepository
     }
     
-    func fetchMovieList() -> Observable<[MovieViewModel]> {
-        let nowPlayingObservable = movieRepository.fetchNowPlaying()
-            .map { $0.map { MovieViewModel(movie: $0) } }
-        
-        let popularObservable = movieRepository.fetchPopularMovies()
-            .map { $0.map { MovieViewModel(movie: $0) } }
-        
-        let topRatedObservable = movieRepository.fetchTopRated()
-            .map { $0.map { MovieViewModel(movie: $0) } }
-        
-        let upcomingObservable = movieRepository.fetchUpcoming()
-            .map { $0.map { MovieViewModel(movie: $0) } }
-        
-        return Observable.combineLatest(
-              nowPlayingObservable,
-              popularObservable,
-              topRatedObservable,
-              upcomingObservable
-        )
+    func fetchNowPlaying() -> Observable<[MovieViewModel]> {
+        return  movieRepository.fetchNowPlaying().map { $0.map { MovieViewModel(movie: $0) } }
+    }
+    
+    func fetchPopular() -> Observable<[MovieViewModel]> {
+        return movieRepository.fetchPopularMovies().map { $0.map { MovieViewModel(movie: $0) } }
+    }
+    
+    func fetchTopRated() -> Observable<[MovieViewModel]> {
+        return movieRepository.fetchTopRated().map { $0.map { MovieViewModel(movie: $0) } }
+    }
+    
+    func fetchUpcoming() -> Observable<[MovieViewModel]> {
+        return movieRepository.fetchUpcoming().map { $0.map { MovieViewModel(movie: $0) } }
     }
 }
