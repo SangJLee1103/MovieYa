@@ -39,7 +39,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()
-        bind()
+        subscribe()
     }
     
     required init?(coder: NSCoder) {
@@ -47,6 +47,7 @@ class MovieCollectionViewCell: UICollectionViewCell {
     }
     
     private func configureUI() {
+        backgroundColor = .systemBackground
         addSubview(imageView)
         imageView.snp.makeConstraints {
             $0.top.trailing.leading.bottom.equalToSuperview()
@@ -59,10 +60,10 @@ class MovieCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func bind() {
+    private func subscribe() {
         self.viewModel.subscribe(onNext:{ movieViewModel in
             if let posterUrl = movieViewModel.posterPath {
-                self.imageView.sd_setImage(with: URL(string: posterUrl))
+                self.imageView.sd_setImage(with: URL(string: posterUrl), completed: nil)
             } else {
                 print("없음")
             }

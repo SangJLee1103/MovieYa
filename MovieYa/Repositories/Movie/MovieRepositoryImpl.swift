@@ -19,6 +19,7 @@ class MovieRepositoryImpl: MovieRepository {
                 case .failure(let error):
                     observer.onError(error)
                 }
+                observer.onCompleted()
             }
             return Disposables.create()
         }
@@ -33,6 +34,7 @@ class MovieRepositoryImpl: MovieRepository {
                 case .failure(let error):
                     observer.onError(error)
                 }
+                observer.onCompleted()
             }
             return Disposables.create()
         }
@@ -47,6 +49,7 @@ class MovieRepositoryImpl: MovieRepository {
                 case .failure(let error):
                     observer.onError(error)
                 }
+                observer.onCompleted()
             }
             return Disposables.create()
         }
@@ -61,6 +64,7 @@ class MovieRepositoryImpl: MovieRepository {
                 case .failure(let error):
                     observer.onError(error)
                 }
+                observer.onCompleted()
             }
             return Disposables.create()
         }

@@ -105,56 +105,78 @@ class HomeViewController: UICollectionViewController {
     }
     
     private func fetchMovieList() {
-        let nowPlayingObservable = viewModel.fetchNowPlaying()
-            .observe(on: MainScheduler.instance) // UI 업데이트를 메인 스레드에서 수행
-        let popularObservable = viewModel.fetchPopular()
-            .observe(on: MainScheduler.instance)
-        let topRatedObservable = viewModel.fetchTopRated()
-            .observe(on: MainScheduler.instance)
-        let upcomingObservable = viewModel.fetchUpcoming()
-            .observe(on: MainScheduler.instance)
-        
-        Observable.zip(nowPlayingObservable, popularObservable, topRatedObservable, upcomingObservable)
-            .subscribe(onNext: { [weak self] (nowPlaying, popular, topRated, upcoming) in
-                // 각 섹션에 대한 BehaviorRelay에 데이터 업데이트
-                self?.nowPlayingViewModel.accept(nowPlaying)
-                self?.popularViewModel.accept(popular)
-                self?.topRatedViewModel.accept(topRated)
-                self?.upcomingViewModel.accept(upcoming)
-                // collectionView 업데이트
-                self?.collectionView.reloadData()
-            })
-            .disposed(by: disposeBag)
-    }
-    
-    private func reloadSection(_ section: HomeSection) {
-        guard let sectionIndex = sections.firstIndex(of: section) else {
-            return
+        Observable.combineLatest(
+            viewModel.fetchNowPlaying(),
+            viewModel.fetchPopular(),
+            viewModel.fetchTopRated(),
+            viewModel.fetchUpcoming()
+        ) { nowPlaying, popular, topRated, upcoming in
+            return (nowPlaying, popular, topRated, upcoming)
         }
+        .subscribe(onNext: { [weak self] data in
+            let (nowPlaying, popular, topRated, upcoming) = data
+            self?.nowPlayingViewModel.accept(nowPlaying)
+            self?.popularViewModel.accept(popular)
+            self?.topRatedViewModel.accept(topRated)
+            self?.upcomingViewModel.accept(upcoming)
+        }).disposed(by: disposeBag)
         
-        let sectionIndexPath = IndexPath(item: 0, section: sectionIndex)
-        
-        DispatchQueue.main.async {
-            self.collectionView.reloadSections(IndexSet(integer: sectionIndexPath.section))
-        }
+//        viewModel.fetchNowPlaying().subscribe(onNext: { [weak self] movieViewModel in
+//            self?.nowPlayingViewModel.accept(movieViewModel)
+//        }).disposed(by: disposeBag)
+//        
+//        viewModel.fetchPopular().subscribe(onNext: { [weak self] movieViewModel in
+//            self?.popularViewModel.accept(movieViewModel)
+//        }).disposed(by: disposeBag)
+//        
+//        viewModel.fetchTopRated().subscribe(onNext: { [weak self] movieViewModel in
+//            self?.topRatedViewModel.accept(movieViewModel)
+//        }).disposed(by: disposeBag)
+//        
+//        viewModel.fetchUpcoming().subscribe(onNext: { [weak self] movieViewModel in
+//            self?.upcomingViewModel.accept(movieViewModel)
+//        }).disposed(by: disposeBag)
     }
     
     private func subscribe() {
-        nowPlayingViewModelObserver.subscribe(onNext: { [weak self] movies in
-            self?.reloadSection(.nowPlaying)
+        Observable.combineLatest(
+            nowPlayingViewModelObserver,
+            popularViewModelObserver,
+            topRatedViewModelObserver,
+            upcomingViewModelObserver
+        ) { nowPlaying, popular, topRated, upcoming in
+            return [nowPlaying, popular, topRated, upcoming]
+        }
+        .subscribe(onNext: { [weak self] movies in
+            DispatchQueue.main.async {
+                self?.collectionView.reloadData()
+            }
         }).disposed(by: disposeBag)
         
-        popularViewModelObserver.subscribe(onNext: { [weak self] movies in
-            self?.reloadSection(.popular)
-        }).disposed(by: disposeBag)
-        
-        topRatedViewModelObserver.subscribe(onNext: { [weak self] movies in
-            self?.reloadSection(.topRated)
-        }).disposed(by: disposeBag)
-        
-        upcomingViewModelObserver.subscribe(onNext: { [weak self] movies in
-            self?.reloadSection(.upcoming)
-        }).disposed(by: disposeBag)
+//
+//        nowPlayingViewModelObserver
+//            .subscribe(onNext: { [weak self] movies in
+//                guard let section = (self?.sections.firstIndex { $0 == .nowPlaying }) else { return }
+//                self?.collectionView.reloadSections([section])
+//        }).disposed(by: disposeBag)
+//        
+//        popularViewModelObserver
+//            .subscribe(onNext: { [weak self] movies in
+//                guard let section = (self?.sections.firstIndex { $0 == .popular }) else { return }
+//                self?.collectionView.reloadSections([section])
+//        }).disposed(by: disposeBag)
+//        
+//        topRatedViewModelObserver
+//            .subscribe(onNext: { [weak self] movies in
+//                guard let section = (self?.sections.firstIndex { $0 == .topRated }) else { return }
+//                self?.collectionView.reloadSections([section])
+//        }).disposed(by: disposeBag)
+//        
+//        upcomingViewModelObserver
+//            .subscribe(onNext: { [weak self] movies in
+//                guard let section = (self?.sections.firstIndex { $0 == .upcoming }) else { return }
+//                self?.collectionView.reloadSections([section])
+//        }).disposed(by: disposeBag)
     }
     
     private func moveAndResizeImage(for height: CGFloat) {
@@ -218,19 +240,18 @@ extension HomeViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCollectionViewCell.identifier, for: indexPath) as! MovieCollectionViewCell
         
-        let movie: MovieViewModel
+        let movieViewModel: MovieViewModel
         switch sections[indexPath.section] {
         case .nowPlaying:
-            movie = nowPlayingViewModel.value[indexPath.row]
+            movieViewModel = nowPlayingViewModel.value[indexPath.row]
         case .popular:
-            movie = popularViewModel.value[indexPath.row]
+            movieViewModel = popularViewModel.value[indexPath.row]
         case .topRated:
-            movie = topRatedViewModel.value[indexPath.row]
+            movieViewModel = topRatedViewModel.value[indexPath.row]
         case .upcoming:
-            movie = upcomingViewModel.value[indexPath.row]
+            movieViewModel = upcomingViewModel.value[indexPath.row]
         }
-        
-        cell.viewModel.onNext(movie)
+        cell.viewModel.onNext(movieViewModel)
         return cell
     }
     
