@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02031B352AC1B3D900B45C09 /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02031B342AC1B3D900B45C09 /* UIHelper.swift */; };
+		02031B382AC8091500B45C09 /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 02031B372AC8091500B45C09 /* Debug.xcconfig */; };
+		02031B3A2AC812C700B45C09 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02031B392AC812C700B45C09 /* HomeViewModel.swift */; };
+		02031B3D2AC813BA00B45C09 /* HomeEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02031B3C2AC813BA00B45C09 /* HomeEnum.swift */; };
+		02031B3F2AC8165300B45C09 /* MovieViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02031B3E2AC8165300B45C09 /* MovieViewModel.swift */; };
 		02BD18402ABC874800AAC7F5 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD183F2ABC874800AAC7F5 /* HomeViewController.swift */; };
 		02BD18422ABC876E00AAC7F5 /* MyInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD18412ABC876E00AAC7F5 /* MyInfoViewController.swift */; };
 		02BD18442ABEA6B900AAC7F5 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02BD18432ABEA6B900AAC7F5 /* SearchViewController.swift */; };
@@ -48,6 +53,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		02031B342AC1B3D900B45C09 /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
+		02031B372AC8091500B45C09 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		02031B392AC812C700B45C09 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		02031B3C2AC813BA00B45C09 /* HomeEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEnum.swift; sourceTree = "<group>"; };
+		02031B3E2AC8165300B45C09 /* MovieViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieViewModel.swift; sourceTree = "<group>"; };
 		02BD183F2ABC874800AAC7F5 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		02BD18412ABC876E00AAC7F5 /* MyInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyInfoViewController.swift; sourceTree = "<group>"; };
 		02BD18432ABEA6B900AAC7F5 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +119,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		02031B362AC808DA00B45C09 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				02031B372AC8091500B45C09 /* Debug.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		02031B3B2AC8139A00B45C09 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				02031B3C2AC813BA00B45C09 /* HomeEnum.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
 		02BD183E2ABC873400AAC7F5 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -131,6 +157,8 @@
 		02BD18462ABEA8E700AAC7F5 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				02031B392AC812C700B45C09 /* HomeViewModel.swift */,
+				02031B3E2AC8165300B45C09 /* MovieViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -147,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				02BD184B2ABEAA2200AAC7F5 /* NavigationBarConst.swift */,
+				02031B342AC1B3D900B45C09 /* UIHelper.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -212,6 +241,8 @@
 		02EAFC492ABC8363002E9C7D /* MovieYa */ = {
 			isa = PBXGroup;
 			children = (
+				02031B3B2AC8139A00B45C09 /* Enums */,
+				02031B362AC808DA00B45C09 /* Config */,
 				02BD184A2ABEA98800AAC7F5 /* Delegate */,
 				02BD18492ABEA91B00AAC7F5 /* Views */,
 				02BD18482ABEA90B00AAC7F5 /* Utils */,
@@ -377,6 +408,7 @@
 			files = (
 				02EAFC572ABC8364002E9C7D /* LaunchScreen.storyboard in Resources */,
 				02EAFC542ABC8364002E9C7D /* Assets.xcassets in Resources */,
+				02031B382AC8091500B45C09 /* Debug.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,12 +543,16 @@
 				02EAFC4F2ABC8363002E9C7D /* MainTabViewController.swift in Sources */,
 				02BD185D2AC0407600AAC7F5 /* MovieHeaderView.swift in Sources */,
 				02EAFC4B2ABC8363002E9C7D /* AppDelegate.swift in Sources */,
+				02031B3D2AC813BA00B45C09 /* HomeEnum.swift in Sources */,
 				02BD18502ABEACAA00AAC7F5 /* MovieRepositoryImpl.swift in Sources */,
 				02BD18422ABC876E00AAC7F5 /* MyInfoViewController.swift in Sources */,
 				02BD184C2ABEAA2200AAC7F5 /* NavigationBarConst.swift in Sources */,
 				02EAFC4D2ABC8363002E9C7D /* SceneDelegate.swift in Sources */,
 				02BD18562ABEC49B00AAC7F5 /* Movie.swift in Sources */,
 				02BD18402ABC874800AAC7F5 /* HomeViewController.swift in Sources */,
+				02031B352AC1B3D900B45C09 /* UIHelper.swift in Sources */,
+				02031B3F2AC8165300B45C09 /* MovieViewModel.swift in Sources */,
+				02031B3A2AC812C700B45C09 /* HomeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,8 +716,9 @@
 		};
 		02EAFC722ABC8364002E9C7D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 127CD929F2830CDF9715C297 /* Pods-MovieYa.debug.xcconfig */;
+			baseConfigurationReference = 02031B372AC8091500B45C09 /* Debug.xcconfig */;
 			buildSettings = {
+				API_KEY = "${API_KEY}";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;

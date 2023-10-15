@@ -32,7 +32,7 @@ class MovieHeaderView: UICollectionReusableView {
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.leading.trailing.equalToSuperview().inset(10)
         }
     }
     

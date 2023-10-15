@@ -9,5 +9,8 @@ import Foundation
 import RxSwift
 
 protocol MovieRepository {
-    func fetchMovies() 
+    func fetchNowPlaying() -> Observable<[Movie]>
+    func fetchPopularMovies() -> Observable<[Movie]>
+    func fetchTopRated() -> Observable<[Movie]>
+    func fetchUpcoming() -> Observable<[Movie]>
 }
